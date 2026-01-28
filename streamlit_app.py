@@ -249,6 +249,31 @@ holiday_dates.update(custom_holidays)
 
 calendar = pd.date_range(start=start_date, end=end_date, freq="D")
 
+
+def add_business_days(
+    anchor_date: dt.date,
+    business_days: int,
+    holidays: set[dt.date],
+    rule: ProcedureRule,
+    count_from_next_day: bool,
+) -> dt.date:
+    if business_days <= 0:
+        return anchor_date
+
+    days_added = 0
+    current = anchor_date
+    if count_from_next_day:
+        current += dt.timedelta(days=1)
+
+    while days_added < business_days:
+        if is_working_day(current, holidays, rule):
+            days_added += 1
+            if days_added == business_days:
+                break
+        current += dt.timedelta(days=1)
+
+    return current
+
 def build_calendar_frame() -> pd.DataFrame:
     weekdays = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
     rows = []
@@ -297,6 +322,44 @@ else:
     st.markdown(
         f"**Partido judicial:** {party if party else 'Sin especificar'}"
     )
+
+st.subheader("Cálculo de plazo (días hábiles)")
+
+calc_col_a, calc_col_b, calc_col_c = st.columns(3)
+
+with calc_col_a:
+    notification_date = st.date_input(
+        "Fecha de notificación",
+        value=start_date,
+        key="notification_date",
+    )
+
+with calc_col_b:
+    business_days = st.number_input(
+        "Número de días hábiles",
+        min_value=1,
+        value=10,
+        step=1,
+    )
+
+with calc_col_c:
+    count_method = st.selectbox(
+        "Inicio del cómputo",
+        ["Día siguiente", "Mismo día"],
+    )
+
+deadline = add_business_days(
+    notification_date,
+    int(business_days),
+    holiday_dates,
+    rule,
+    count_from_next_day=count_method == "Día siguiente",
+)
+
+deadline_weekdays = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+st.success(
+    f"Fecha de vencimiento: **{deadline} ({deadline_weekdays[deadline.weekday()]})**"
+)
 
 st.subheader("Detalle de días")
 

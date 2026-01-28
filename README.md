@@ -1,8 +1,6 @@
-# :earth_americas: GDP dashboard template
+# ⚖️ Calculadora de días hábiles judiciales
 
-A simple Streamlit app showing the GDP of different countries in the world.
-
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://gdp-dashboard-template.streamlit.app/)
+Aplicación Streamlit para calcular días hábiles judiciales en España para Andalucía y Madrid.
 
 ### How to run it on your own machine
 
@@ -17,3 +15,12 @@ A simple Streamlit app showing the GDP of different countries in the world.
    ```
    $ streamlit run streamlit_app.py
    ```
+
+### Ejecutar en Windows
+
+Puedes usar el archivo `run_app.bat` para iniciar la aplicación con doble clic tras instalar
+las dependencias.
+
+> Nota: Streamlit es una aplicación web local. No se genera un `.exe` único sin usar herramientas
+> de empaquetado de terceros (por ejemplo, PyInstaller). En ese caso, suele ser preferible
+> distribuir un instalador o un script de arranque.
